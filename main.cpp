@@ -20,28 +20,36 @@ class TodoList {
         std::ofstream file(file_location, std::ios::out | std::ios::app);
         todos.push_back(Todo(todo, false));
 
+        file << todo << " "
+             << "false"
+             << "\n";
+
+        file.close();
+    }
+
+    void done(int index) {
+        std::ofstream file(file_location, std::ios::out);
+
+        /* Overwrite the file changing the done status of the todo */
+        int i = 0;
         for (auto& t : todos) {
-            file << t.name << " "
-                 << "false"
-                 << "\n";
+            file << t.name << " " << (index == i ? "true" : "false") << "\n";
+            i++;
         }
 
         file.close();
     }
 
-    void done(std::string& todo) {
+    void remove(int index) {
+        todos.erase(todos.begin() + index); /* Remove the element */
+
+        /* Update the change in the file */
         std::ofstream file(file_location, std::ios::out);
 
+        int i = 0;
         for (auto& t : todos) {
-            if (!t.done) {
-                file << t.name << " "
-                     << "true"
-                     << "\n";
-            } else {
-                file << t.name << " "
-                     << "false"
-                     << "\n";
-            }
+            file << t.name << " " << t.done << "\n";
+            i++;
         }
 
         file.close();
@@ -60,10 +68,9 @@ class TodoList {
         while (std::getline(file, line)) {
             std::istringstream iss(line);
 
-            std::string name;
-            bool done;
+            std::string name, done;
             iss >> name >> done;
-            todos.push_back(Todo(name, done));
+            todos.push_back(Todo(name, done == "true" ? true : false));
         }
 
         file.close();
@@ -73,7 +80,19 @@ class TodoList {
         if (command == "add") {
             add(arg);
         } else if (command == "done") {
-            done(arg);
+            try {
+                int index = std::stoi(arg); /* Will throw if fails */
+                done(index - 1); /* Because index in printed list is 1-based */
+            } catch (const std::exception& _) {
+                throw std::invalid_argument("Invalid index " + arg);
+            }
+        } else if (command == "rm") {
+            try {
+                int index = std::stoi(arg);
+                remove(index - 1);
+            } catch (const std::exception& _) {
+                throw std::invalid_argument("Invalid index " + arg);
+            }
         } else {
             throw std::invalid_argument("No command " + command + " exists.");
         }
@@ -87,10 +106,11 @@ class TodoList {
 
         int i = 1;
         for (auto& todo : todos) {
-            std::cout << i << ": " << todo.name << ", "
+            std::cout << i << " " << todo.name << ", "
                       << (todo.done ? "\x1b[32mdone\x1b[0m"
                                     : "\x1b[31mnot done\x1b[0m")
                       << "\n";
+            i++;
         }
     }
 };
@@ -100,9 +120,10 @@ void print_help() {
     std::cout << "Simple todo app.\n\n";
 
     std::cout << "\x1b[32mUsage:\x1b[0m\n";
+    std::cout << "  todo : list all tasks with indexes\n";
     std::cout << "  todo add <task> : add new task\n";
-    std::cout << "  todo done <task> : mark task as done\n";
-    std::cout << "  todo list : list all tasks\n";
+    std::cout << "  todo done <index> : mark indexth as done\n";
+    std::cout << "  todo rm <index> : remove indexth task\n";
     std::cout << "  todo help : show this help\n";
     std::cout << "  todo version : show version\n";
 }
