@@ -95,6 +95,18 @@ class TodoList {
     }
 };
 
+void print_help() {
+    std::cout << "todo version \x1b[32m0.0.1\x1b[0m\n";
+    std::cout << "Simple todo app.\n\n";
+
+    std::cout << "\x1b[32mUsage:\x1b[0m\n";
+    std::cout << "  todo add <task> : add new task\n";
+    std::cout << "  todo done <task> : mark task as done\n";
+    std::cout << "  todo list : list all tasks\n";
+    std::cout << "  todo help : show this help\n";
+    std::cout << "  todo version : show version\n";
+}
+
 int main(int argc, const char** argv) {
     try {
         TodoList todo;
@@ -106,15 +118,7 @@ int main(int argc, const char** argv) {
                 std::cout << "todo version \x1b[32m0.0.1\x1b[0m\n";
                 std::cout << "Written with <3 by pes18fan\n";
             } else if (std::string(argv[1]) == "help") {
-                std::cout << "todo version \x1b[32m0.0.1\x1b[0m\n";
-                std::cout << "Simple todo app.\n\n";
-
-                std::cout << "\x1b[32mUsage:\x1b[0m\n";
-                std::cout << "  todo add <task> : add new task\n";
-                std::cout << "  todo done <task> : mark task as done\n";
-                std::cout << "  todo list : list all tasks\n";
-                std::cout << "  todo help : show this help\n";
-                std::cout << "  todo version : show version\n";
+                print_help();
             } else {
                 throw std::invalid_argument(
                     "You need to provide an argument for the command!");
