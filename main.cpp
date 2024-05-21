@@ -16,39 +16,49 @@ class TodoList {
   private:
     std::string file_location = "./todo.txt";
 
-    void add(std::string& todo) {
+    void add(std::vector<std::string>& input_todos) {
         std::ofstream file(file_location, std::ios::out | std::ios::app);
-        todos.push_back(Todo(todo, false));
-
-        file << todo << " "
-             << "false"
-             << "\n";
+        for (auto& todo : input_todos) {
+            todos.push_back(Todo(todo, false));
+            file << todo << " "
+                 << "false"
+                 << "\n";
+        }
 
         file.close();
     }
 
-    void done(int index) {
+    void done(std::vector<int> indices) {
+        for (int& i : indices) {
+            todos[i].done = true;
+        }
+
         std::ofstream file(file_location, std::ios::out);
 
         /* Overwrite the file changing the done status of the todo */
         int i = 0;
         for (auto& t : todos) {
-            file << t.name << " " << (index == i ? "true" : "false") << "\n";
+            file << t.name << " " << (t.done ? "true" : "false") << "\n";
             i++;
         }
 
         file.close();
     }
 
-    void remove(int index) {
-        todos.erase(todos.begin() + index); /* Remove the element */
+    void remove(std::vector<int> indices) {
+        int deletion_count = 0;
+        for (int& i : indices) {
+            todos.erase(todos.begin() + i -
+                        deletion_count); /* Remove the elements */
+            deletion_count++;
+        }
 
         /* Update the change in the file */
         std::ofstream file(file_location, std::ios::out);
 
         int i = 0;
         for (auto& t : todos) {
-            file << t.name << " " << t.done << "\n";
+            file << t.name << " " << (t.done ? "true" : "false") << "\n";
             i++;
         }
 
@@ -76,23 +86,35 @@ class TodoList {
         file.close();
     }
 
-    void handle_command(std::string& command, std::string& arg) {
+    void handle_command(std::string& command, std::vector<std::string>& args) {
         if (command == "add") {
-            add(arg);
+            add(args);
         } else if (command == "done") {
-            try {
-                int index = std::stoi(arg); /* Will throw if fails */
-                done(index - 1); /* Because index in printed list is 1-based */
-            } catch (const std::exception& _) {
-                throw std::invalid_argument("Invalid index " + arg);
+            std::vector<int> indices;
+            for (auto& arg : args) {
+                try {
+                    int index = std::stoi(arg);
+                    indices.push_back(
+                        index -
+                        1); /* Because index in printed list is 1-based */
+                } catch (const std::exception& _) {
+                    throw std::invalid_argument("Invalid index " + arg);
+                }
             }
+            done(indices);
         } else if (command == "rm") {
-            try {
-                int index = std::stoi(arg);
-                remove(index - 1);
-            } catch (const std::exception& _) {
-                throw std::invalid_argument("Invalid index " + arg);
+            std::vector<int> indices;
+            for (auto& arg : args) {
+                try {
+                    int index = std::stoi(arg);
+                    indices.push_back(
+                        index -
+                        1); /* Because index in printed list is 1-based */
+                } catch (const std::exception& _) {
+                    throw std::invalid_argument("Invalid index " + arg);
+                }
             }
+            remove(indices);
         } else {
             throw std::invalid_argument("No command " + command + " exists.");
         }
@@ -146,8 +168,18 @@ int main(int argc, const char** argv) {
             }
         } else {
             std::string command = argv[1];
-            std::string arg = argv[2];
-            todo.handle_command(command, arg);
+
+            argv++;
+            argc--;
+            argv++;
+            argc--;
+
+            std::vector<std::string> args;
+            for (int i = 0; i < argc; i++) {
+                args.push_back(argv[i]);
+            }
+
+            todo.handle_command(command, args);
         }
     } catch (const std::exception& e) {
         std::cerr << e.what() << "\n";
