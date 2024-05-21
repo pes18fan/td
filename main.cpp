@@ -138,16 +138,15 @@ class TodoList {
 };
 
 void print_help() {
-    std::cout << "todo version \x1b[32m0.0.1\x1b[0m\n";
-    std::cout << "Simple todo app.\n\n";
-
-    std::cout << "\x1b[32mUsage:\x1b[0m\n";
-    std::cout << "  todo : list all tasks with indexes\n";
-    std::cout << "  todo add <task> : add new task\n";
-    std::cout << "  todo done <index> : mark indexth as done\n";
-    std::cout << "  todo rm <index> : remove indexth task\n";
-    std::cout << "  todo help : show this help\n";
-    std::cout << "  todo version : show version\n";
+    std::cout << "todo version \x1b[32m0.0.1\x1b[0m\n"
+              << "Simple todo app.\n\n"
+              << "\x1b[32mUsage:\x1b[0m\n"
+              << "  todo : list all tasks with indices\n"
+              << "  todo add <tasks> : add new task\n"
+              << "  todo done <indices> : mark indexth as done\n"
+              << "  todo rm <indices> : remove indexth task\n"
+              << "  todo help : show this help\n"
+              << "  todo version : show version\n";
 }
 
 int main(int argc, const char** argv) {
@@ -158,8 +157,8 @@ int main(int argc, const char** argv) {
             todo.list();
         } else if (argc == 2) {
             if (std::string(argv[1]) == "version") {
-                std::cout << "todo version \x1b[32m0.0.1\x1b[0m\n";
-                std::cout << "Written with <3 by pes18fan\n";
+                std::cout << "todo version \x1b[32m0.0.1\x1b[0m\n"
+                          << "Written with <3 by pes18fan\n";
             } else if (std::string(argv[1]) == "help") {
                 print_help();
             } else {
