@@ -138,15 +138,15 @@ class TodoList {
 };
 
 void print_help() {
-    std::cout << "todo version \x1b[32m0.0.1\x1b[0m\n"
+    std::cout << "td version \x1b[32m0.0.1\x1b[0m\n"
               << "Simple todo app.\n\n"
               << "\x1b[32mUsage:\x1b[0m\n"
-              << "  todo : list all tasks with indices\n"
-              << "  todo add <tasks> : add new task\n"
-              << "  todo done <indices> : mark indexth as done\n"
-              << "  todo rm <indices> : remove indexth task\n"
-              << "  todo help : show this help\n"
-              << "  todo version : show version\n";
+              << "  td : list all tasks with indices\n"
+              << "  td add <tasks> : add new task\n"
+              << "  td done <indices> : mark indexth as done\n"
+              << "  td rm <indices> : remove indexth task\n"
+              << "  td help : show this help\n"
+              << "  td version : show version\n";
 }
 
 int main(int argc, const char** argv) {
@@ -157,7 +157,7 @@ int main(int argc, const char** argv) {
             todo.list();
         } else if (argc == 2) {
             if (std::string(argv[1]) == "version") {
-                std::cout << "todo version \x1b[32m0.0.1\x1b[0m\n"
+                std::cout << "td version \x1b[32m0.0.1\x1b[0m\n"
                           << "Written with <3 by pes18fan\n";
             } else if (std::string(argv[1]) == "help") {
                 print_help();

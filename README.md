@@ -1,11 +1,11 @@
-# todo
+# td
 
 Very simple command-line todo app written in less than 200 sloc of C++. Inspired 
 by [this](https://github.com/sioodmy/todo).
 
 ## How to use?
 
-Check `todo help`.
+Check `td help`.
 
 ## Building
 

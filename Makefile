@@ -1,8 +1,8 @@
 all:
-	@g++ main.cpp -o todo
+	@g++ main.cpp -o td
 
 run: all
-	@./todo
+	@./td
 
 clean:
-	@rm -f ./todo
+	@rm -f ./td
