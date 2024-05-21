@@ -13,6 +13,6 @@ Use `make`. If you don't have it, just compile with any C++ compiler; for instan
 with `g++`:
 
 ```bash
-g++ main.cpp -o todo
+g++ main.cpp -o td
 ```
 
