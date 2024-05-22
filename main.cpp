@@ -20,15 +20,13 @@ class TodoList {
         std::ofstream file(file_location, std::ios::out | std::ios::app);
         for (auto& todo : input_todos) {
             todos.push_back(Todo(todo, false));
-            file << todo << " "
-                 << "false"
-                 << "\n";
+            file << todo << " " << "false" << "\n";
         }
 
         file.close();
     }
 
-    void done(std::vector<int> indices) {
+    void done(std::vector<int>& indices) {
         for (int& i : indices) {
             todos[i].done = true;
         }
@@ -37,7 +35,7 @@ class TodoList {
 
         /* Overwrite the file changing the done status of the todo */
         int i = 0;
-        for (auto& t : todos) {
+        for (Todo& t : todos) {
             file << t.name << " " << (t.done ? "true" : "false") << "\n";
             i++;
         }
@@ -45,7 +43,7 @@ class TodoList {
         file.close();
     }
 
-    void remove(std::vector<int> indices) {
+    void remove(std::vector<int>& indices) {
         int deletion_count = 0;
         for (int& i : indices) {
             todos.erase(todos.begin() + i -
@@ -57,7 +55,7 @@ class TodoList {
         std::ofstream file(file_location, std::ios::out);
 
         int i = 0;
-        for (auto& t : todos) {
+        for (Todo& t : todos) {
             file << t.name << " " << (t.done ? "true" : "false") << "\n";
             i++;
         }
@@ -127,7 +125,7 @@ class TodoList {
         }
 
         int i = 1;
-        for (auto& todo : todos) {
+        for (Todo& todo : todos) {
             std::cout << i << " " << todo.name << ", "
                       << (todo.done ? "\x1b[32mdone\x1b[0m"
                                     : "\x1b[31mnot done\x1b[0m")
