@@ -37,7 +37,6 @@ class TodoList {
         int i = 0;
         for (Todo& t : todos) {
             file << t.name << " " << (t.done ? "true" : "false") << "\n";
-            i++;
         }
 
         file.close();
@@ -57,7 +56,6 @@ class TodoList {
         int i = 0;
         for (Todo& t : todos) {
             file << t.name << " " << (t.done ? "true" : "false") << "\n";
-            i++;
         }
 
         file.close();
@@ -92,6 +90,9 @@ class TodoList {
             for (auto& arg : args) {
                 try {
                     int index = std::stoi(arg);
+                    if (index < 1 || index > todos.size()) 
+                        throw std::invalid_argument("Invalid index " + arg);
+
                     indices.push_back(
                         index -
                         1); /* Because index in printed list is 1-based */
@@ -99,12 +100,17 @@ class TodoList {
                     throw std::invalid_argument("Invalid index " + arg);
                 }
             }
+
             done(indices);
+            std::cout << "Provided tasks marked done!\n";
         } else if (command == "rm") {
             std::vector<int> indices;
             for (auto& arg : args) {
                 try {
                     int index = std::stoi(arg);
+                    if (index < 1 || index > todos.size()) 
+                        throw std::invalid_argument("Invalid index " + arg);
+
                     indices.push_back(
                         index -
                         1); /* Because index in printed list is 1-based */
@@ -112,7 +118,9 @@ class TodoList {
                     throw std::invalid_argument("Invalid index " + arg);
                 }
             }
+
             remove(indices);
+            std::cout << "Provided tasks removed!\n";
         } else {
             throw std::invalid_argument("No command " + command + " exists.");
         }
@@ -139,12 +147,12 @@ void print_help() {
     std::cout << "td version \x1b[32m0.0.1\x1b[0m\n"
               << "Simple todo app.\n\n"
               << "\x1b[32mUsage:\x1b[0m\n"
-              << "  td : list all tasks with indices\n"
-              << "  td add <tasks> : add new task\n"
+              << "  td                : list all tasks with indices\n"
+              << "  td add <tasks>    : add new task\n"
               << "  td done <indices> : mark indexth as done\n"
-              << "  td rm <indices> : remove indexth task\n"
-              << "  td help : show this help\n"
-              << "  td version : show version\n";
+              << "  td rm <indices>   : remove indexth task\n"
+              << "  td help           : show this help\n"
+              << "  td version        : show version\n";
 }
 
 int main(int argc, const char** argv) {
@@ -179,7 +187,7 @@ int main(int argc, const char** argv) {
             todo.handle_command(command, args);
         }
     } catch (const std::exception& e) {
-        std::cerr << e.what() << "\n";
+        std::cerr << "error: " << e.what() << "\n";
         return 1;
     }
 
